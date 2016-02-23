@@ -1,26 +1,28 @@
+# Class: pxe::images::mfsbsd
+#
+# Retrieve the requested MfsBSD image
+#
 define pxe::images::mfsbsd(
-    $arch,
-    $ver,
-    $os      = "mfsbsd",
-    $baseurl = ''
-    ) {
-# This assumes debian as an os, but it works equally for os="ubuntu"
+  $arch,
+  $ver,
+  $os      = 'mfsbsd',
+  $baseurl = ''
+) {
 
   if $baseurl == '' {
     case $os {
-      default:  { $srclocation = "http://mfsbsd.vx.sk/files/images" }
+      default:  { $srclocation = 'http://mfsbsd.vx.sk/files/images' }
     }
   }
 
-  # http://mirrors.kernel.org/debian/dists/lucid/main/installer-amd64/current/images/netboot/debian-installer/amd64/
+  # http://mfsbsd.vx.sk/files/images/10/amd64/mfsbsd-10.2-RELEASE-amd64.img
   $path    = "${os}-${ver}-${arch}.img"
   $tftp_root = $::pxe::tftp_root
 
   exec { "wget ${os} live image ${arch} ${ver}":
-      path    => ["/usr/bin", "/usr/local/bin"],
+      path    => ['/usr/bin', '/usr/local/bin'],
       cwd     => "${tftp_root}/images/${os}/",
       command => "wget ${srclocation}/${path}",
       creates => "${tftp_root}/images/${os}/${path}";
   }
-
 }
